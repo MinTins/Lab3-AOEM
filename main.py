@@ -1,3 +1,4 @@
+
 # Flakey Roman K-23
 # 18. 10h.24m
 # F(a,b)=b-a/b+1.5/(a*b)
@@ -79,7 +80,7 @@ class CoProcessor:
 		print("Stack:", "\n".join(f"	{k}: {x}" for k,x in enumerate(self._STACK)), "	" + "[-] "*(self._STACK_SIZE-len(self._STACK)), sep="\n")
 		mem_values = ".".join(map(self.to_hex, self._RAM.values()))
 		print("Memory:", mem_values,
-			".".join(str(k).zfill(2).center(len(mem_values[k])) for k in self._RAM.keys()), sep="\n	")
+			".".join(str(k).zfill(2).center(len(mem_values.split(".")[k])) for k in self._RAM.keys()), sep="\n	")
 
 		print("PS:", str(self._PS).ljust(10),"IX:", self._IX)
 		print("PC:", str(self._PC).ljust(10),"TC:", self._TC)
@@ -94,7 +95,7 @@ class CoProcessor:
 		self._CMD = cmd;
 		self._Ins = [];
 		self._PC += 1;
-		self._TC = 1;
+		self._TC = 0;
 
 
 	def _executer(self):
@@ -222,9 +223,10 @@ def main():
 	cp = CoProcessor()
 
 	print("[ Info ]")
+	print("-"*60)
 	IEEE754("0.0").show_info();
-
-	print("Start program code on created simulation processor..")
+	print("-"*60)
+	print("\nStart program code on created simulation processor..")
 
 	for line in program_code:
 		cp.cmd_procedure(line)
