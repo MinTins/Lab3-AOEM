@@ -212,6 +212,40 @@ class IEEE754:
 		return result
 
 
+	def show_info(self):
+		#print(f's {"e" * self._HARACTERISE_BIT_LENGTH} M.{"m" * self._MANTISE_BIT_LENGTH} decimal value')
+
+		z = [0] + [0] * (self._HARACTERISE_BIT_LENGTH - 1) + [1] + [0] * self._MANTISE_BIT_LENGTH
+		print(f'\n[мінімальне за абсолютною величиною ненульове представлення:]\n	{self.ieee754_to_str(z):70}')
+
+		z = [0] + [1] * (self._HARACTERISE_BIT_LENGTH - 1) + [0] + [1] * self._MANTISE_BIT_LENGTH
+		print(f'\n[максимальне додатнє представлення (2 - 2^(-{self._MANTISE_BIT_LENGTH})) * 2^{self._MAXIMUM_HARACTERISE - 1}]\n	{self.ieee754_to_str(z):70}')
+
+		z = [1] + [1] * (self._HARACTERISE_BIT_LENGTH - 1) + [0] + [1] * self._MANTISE_BIT_LENGTH
+		print(f'\n[мінімальне від’ємне преставлення]\n	{self.ieee754_to_str(z):70}')
+
+		z = self.str_to_ieee754("1.0")
+		print(f'\n[число +1,0Е0:]\n	{self.ieee754_to_str(z):70}')
+
+		z = [0] + [1] * self._HARACTERISE_BIT_LENGTH + [0] * self._MANTISE_BIT_LENGTH
+		print(f'\n[значення +∞:]\n{self.ieee754_to_str(z):70} ')
+
+		z = [1] + [1] * self._HARACTERISE_BIT_LENGTH + [0] * self._MANTISE_BIT_LENGTH
+		print(f'\n[значення -∞:]\n{self.ieee754_to_str(z):70} ')
+
+		z = [0] + [0] * (self._HARACTERISE_BIT_LENGTH ) + [0] * (self._MANTISE_BIT_LENGTH - 1) + [1]
+		print(f'\n[будь-який варіант для ненормалізованого ЧПТ:]\n	{self.ieee754_to_str(z):70} ')
+
+		z = [0] + [0] * (self._HARACTERISE_BIT_LENGTH + self._MANTISE_BIT_LENGTH )
+		print(f'\n[+0.0]\n{self.ieee754_to_str(z):70}')
+
+		z = [1] + [0] * (self._HARACTERISE_BIT_LENGTH + self._MANTISE_BIT_LENGTH )
+		print(f'\n[-0.0]\n{self.ieee754_to_str(z):70} ')
+
+		z = [0] + [1] * (self._HARACTERISE_BIT_LENGTH ) + [0] * (self._MANTISE_BIT_LENGTH - 1) + [1]
+		print(f'\n[будь-який варіант для NaN-значення:]\n{self.ieee754_to_str(z):70} ')
+
+
 	@staticmethod
 	def comb_str(s: list) -> str:
 		return "".join(map(str,s))

@@ -8,7 +8,7 @@ from config import CoreSettings
 
 import sys
 
-TACT_WORK = False;
+TACT_WORK = True;
 
 
 class CoProcessor:
@@ -77,9 +77,9 @@ class CoProcessor:
 	def show(self):
 		print("\n[ Command:", self._CMD,"]")
 		print("Stack:", "\n".join(f"	{k}: {x}" for k,x in enumerate(self._STACK)), "	" + "[-] "*(self._STACK_SIZE-len(self._STACK)), sep="\n")
-		print("Memory:", 
-			".".join(map(self.to_hex, self._RAM.values())),
-			".".join(str(k).zfill(2) for k in self._RAM.keys()), sep="\n	")
+		mem_values = ".".join(map(self.to_hex, self._RAM.values()))
+		print("Memory:", mem_values,
+			".".join(str(k).zfill(2).center(len(mem_values[k])) for k in self._RAM.keys()), sep="\n	")
 
 		print("PS:", str(self._PS).ljust(10),"IX:", self._IX)
 		print("PC:", str(self._PC).ljust(10),"TC:", self._TC)
@@ -196,6 +196,7 @@ class CoProcessor:
 
 def main():
 	global TACT_WORK
+
 	program_file = None;
 
 	if len(sys.argv) > 1:
@@ -219,6 +220,10 @@ def main():
 
 	print("Create simulation CoProcessor..")
 	cp = CoProcessor()
+
+	print("[ Info ]")
+	IEEE754("0.0").show_info();
+
 	print("Start program code on created simulation processor..")
 
 	for line in program_code:
