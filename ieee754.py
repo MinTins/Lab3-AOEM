@@ -87,16 +87,17 @@ class IEEE754:
 		return s, e, m
 
 
-	def ieee754_to_str(self, x):
-		result = []
+	def ieee754_to_str(self, x=None):
 
 		if isinstance(x, IEEE754):
-			result = [x.sign, x.haracterise, x.mantise]
-		else:
-			result.append(str(x[0]))  # sign
-			result.append(self.comb_str(x[1:self._HARACTERISE_BIT_LENGTH + 1]))  # exponenta
+			x = [x.sign, *x.haracterise, *x.mantise]
 
-			result.append(self.comb_str(x[self._HARACTERISE_BIT_LENGTH + 1:]))  # mantissa
+		result = []
+		result.append(str(x[0]))  # sign
+		result.append(self.comb_str(x[1:self._HARACTERISE_BIT_LENGTH + 1]))  # exponenta
+
+		result.append(self.comb_str(x[self._HARACTERISE_BIT_LENGTH + 1:]))  # mantissa
+		result.append("[-->]")
 
 		mantiss_forgotten_bit = ''
 
@@ -133,10 +134,7 @@ class IEEE754:
 		m = re.fullmatch(r"\s*(\+?|-)(\d+)(?:[,.](\d+)([eE]((?:\+?|-)\d+))?)?\s*", a)
 
 		if m[1] == "-":
-			sign = 1
-
-		a = a[1:]
-		
+			sign = 1		
 		
 		val = f"{m[2]}.{m[3] if m[3] else ''}"
 
@@ -160,7 +158,7 @@ class IEEE754:
 
 				val = val[:dot_ind-1]+"."+val[dot_ind-1]+val[dot_ind+1:]
 
-		if '.' in a:
+		if '.' in val:
 			a1, a2 = val.split('.')
 		else:
 			a1, a2 = a, '0'
@@ -215,17 +213,27 @@ class IEEE754:
 
 
 	@staticmethod
-	def bin_add(*bin_nums: str): 
-		return bin(sum(int(x, 2) for x in bin_nums))[2:]
-
-
-	@staticmethod
 	def comb_str(s: list) -> str:
 		return "".join(map(str,s))
 
 
 	def __str__(self):
 		return f"{self.sign} {self.comb_str(self.haracterise)} {self.comb_str(self.mantise)}"
+
+	def __str_hex__(self):
+		return hex(int(self.comb_str([self.sign, *self.haracterise, *self.mantise])))[2:].zfill(2)
+
+	"""Algoritmic operation"""
+
+	def F(self, value):
+		if isinstance(value, IEEE754):
+			a = self.ieee754_to_float([self.sign]+self.haracterise+self.mantise)
+			b = self.ieee754_to_float([value.sign]+value.haracterise+value.mantise)
+
+			result = IEEE754(str(b-a/b+1.5/(a*b)))
+			return result
+		else:
+			return NotImplemented
 
 
 	def __add__(self, value):
@@ -234,6 +242,39 @@ class IEEE754:
 			val2 = self.ieee754_to_float([value.sign]+value.haracterise+value.mantise)
 
 			result = IEEE754(str(val1+val2))
+			return result
+		else:
+			return NotImplemented
+
+
+	def __sub__(self, value):
+		if isinstance(value, IEEE754):
+			val1 = self.ieee754_to_float([self.sign]+self.haracterise+self.mantise)
+			val2 = self.ieee754_to_float([value.sign]+value.haracterise+value.mantise)
+
+			result = IEEE754(str(val1-val2))
+			return result
+		else:
+			return NotImplemented
+
+
+	def __mul__(self, value):
+		if isinstance(value, IEEE754):
+			val1 = self.ieee754_to_float([self.sign]+self.haracterise+self.mantise)
+			val2 = self.ieee754_to_float([value.sign]+value.haracterise+value.mantise)
+
+			result = IEEE754(str(val1*val2))
+			return result
+		else:
+			return NotImplemented
+
+
+	def __truediv__(self, value):
+		if isinstance(value, IEEE754):
+			val1 = self.ieee754_to_float([self.sign]+self.haracterise+self.mantise)
+			val2 = self.ieee754_to_float([value.sign]+value.haracterise+value.mantise)
+
+			result = IEEE754(str(val1/val2))
 			return result
 		else:
 			return NotImplemented
@@ -261,10 +302,4 @@ class IEEE754:
 
 		ieee754_val = self.str_to_ieee754(value)
 		self._upd_inner_bit_view(ieee754_val)
-		
 
-
-a = IEEE754("1.2e1")
-b = IEEE754("1.2e+2")
-c = a+b
-print(c, c.ieee754_to_str(c))
