@@ -1,0 +1,17 @@
+# Flakey Roman / Example program
+
+push +1.0e+0
+push 2.0e2
+
+s_add stack
+s_sub stack
+F(stack)
+s_mul stack
+s_tdiv stack
+
+pop stack
+pop stack
+pop stack
+
+mem_pop 1
+mem_load 1
