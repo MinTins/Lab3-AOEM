@@ -6,6 +6,8 @@
 from ieee754 import IEEE754
 from config import CoreSettings
 
+import sys
+
 TACT_WORK = False;
 
 
@@ -65,7 +67,11 @@ class CoProcessor:
 			self._RAM[address] = elem
 
 	def load_from_memory(self, address):
-		self.push(self._RAM[address])
+		self.push_stack(self._RAM[address])
+
+	def copy_memory(self, address1, address2):
+		self._RAM[address2] = self._RAM[address1]
+
 
 
 	def show(self):
@@ -147,9 +153,13 @@ class CoProcessor:
 				arg1 = int(cmd.split(" ", 1)[1])
 				self.dump_in_memory(arg1)
 
-		elif cmd.startswith("mem_load ")
+		elif cmd.startswith("mem_load "):
 			arg1 = int(cmd.split(" ", 1)[1])
 			self.load_from_memory(arg1)
+		
+		elif cmd.startswith("mem_copy "):
+			addr1, addr2 = map(int, cmd.split(" ",1)[1].split(">", 1))
+			self.copy_memory(addr1, addr2)
 
 			
 
