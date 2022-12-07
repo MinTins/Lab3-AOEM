@@ -58,7 +58,7 @@ class CoProcessor:
 
 	def reverse_stack(self):
 		if len(self._STACK) > 1:
-			self._STACK = self._STACK[:-2] + self._STACK[-1] + self._STACK[-2]
+			self._STACK[self._IX], self._STACK[-2] = self._STACK[-2], self._STACK[self._IX]
 	
 	""" Memory functions """
 
@@ -117,31 +117,31 @@ class CoProcessor:
 		elif cmd.startswith("s_add stack"):
 			if len(self._STACK) > 1:
 				arg1 = self._STACK[-2]
-				arg2 = self._STACK[-1]
+				arg2 = self._STACK[self._IX]
 				self.push_stack(arg1+arg2)
 
 		elif cmd.startswith("s_sub stack"):
 			if len(self._STACK) > 1:
 				arg1 = self._STACK[-2]
-				arg2 = self._STACK[-1]
+				arg2 = self._STACK[self._IX]
 				self.push_stack(arg1-arg2)
 
 		elif cmd.startswith("s_mul stack"):
 			if len(self._STACK) > 1:
 				arg1 = self._STACK[-2]
-				arg2 = self._STACK[-1]
+				arg2 = self._STACK[self._IX]
 				self.push_stack(arg1*arg2)
 
 		elif cmd.startswith("s_tdiv stack"):
 			if len(self._STACK) > 1:
 				arg1 = self._STACK[-2]
-				arg2 = self._STACK[-1]
+				arg2 = self._STACK[self._IX]
 				self.push_stack(arg1/arg2)
 		
 		elif cmd.startswith("F(stack)"): # Функція варіанту
 			if len(self._STACK) > 1:
 				arg1 = self._STACK[-2]
-				arg2 = self._STACK[-1]
+				arg2 = self._STACK[self._IX]
 				self.push_stack(arg1.F(arg2))
 
 		elif cmd.startswith("index "): # Робота з індексами

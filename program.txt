@@ -13,6 +13,13 @@ pop stack
 pop stack
 pop stack
 
+rev stack
+dupl stack
+
+# приклад індексу
+index 0
+s_add stack
+
 mem_pop 1
 mem_copy 1>3
 mem_load 3
