@@ -8,6 +8,7 @@ from ieee754 import IEEE754
 from config import CoreSettings
 
 import sys
+import os
 
 TACT_WORK = True;
 
@@ -213,7 +214,7 @@ def main():
 		program_file = "program.txt"
 
 	print("Load program file..")
-	with open(program_file) as f:
+	with open(program_file, "r", encoding="utf-8") as f:
 		program_code = f.read().splitlines()
 		f.close()
 
